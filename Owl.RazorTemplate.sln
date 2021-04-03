@@ -1,0 +1,29 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{77FA39D9-97A7-44FB-A25A-F90D21FE228B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{12993872-52E6-45B4-80A0-FE65C067657D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Owl.RazorTemplate", "src\Owl.RazorTemplate\Owl.RazorTemplate.csproj", "{E75F2222-6F18-4D19-8445-2B29598C6777}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Owl.RazorTemplate.Tests", "test\Owl.RazorTemplate.Tests\Owl.RazorTemplate.Tests.csproj", "{0CEBEF5C-3216-47BD-BEE7-67FCBF148B7F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E75F2222-6F18-4D19-8445-2B29598C6777}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E75F2222-6F18-4D19-8445-2B29598C6777}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E75F2222-6F18-4D19-8445-2B29598C6777}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E75F2222-6F18-4D19-8445-2B29598C6777}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CEBEF5C-3216-47BD-BEE7-67FCBF148B7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CEBEF5C-3216-47BD-BEE7-67FCBF148B7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CEBEF5C-3216-47BD-BEE7-67FCBF148B7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CEBEF5C-3216-47BD-BEE7-67FCBF148B7F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E75F2222-6F18-4D19-8445-2B29598C6777} = {77FA39D9-97A7-44FB-A25A-F90D21FE228B}
+		{0CEBEF5C-3216-47BD-BEE7-67FCBF148B7F} = {12993872-52E6-45B4-80A0-FE65C067657D}
+	EndGlobalSection
+EndGlobal

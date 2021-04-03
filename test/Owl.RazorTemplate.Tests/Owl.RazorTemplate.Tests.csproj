@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Owl.RazorTemplate\Owl.RazorTemplate.csproj" />
+        <PackageReference Include="Volo.Abp.Localization" Version="4.*" />
+        <PackageReference Include="Volo.Abp.Autofac" Version="4.*" />
+        <PackageReference Include="Volo.Abp.TestBase" Version="4.*" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+        <PackageReference Include="NSubstitute" Version="4.2.2" />
+        <PackageReference Include="Shouldly" Version="4.0.1" />
+        <PackageReference Include="xunit" Version="2.4.1" />
+        <PackageReference Include="xunit.extensibility.execution" Version="2.4.1" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="SampleTemplates\**\*.cshtml" />
+        <None Remove="SampleTemplates\**\*.cshtml" />
+        <EmbeddedResource Include="Localization\**\*.json" />
+        <None Remove="Localization\**\*.json" />
+    </ItemGroup>
+
+</Project>
