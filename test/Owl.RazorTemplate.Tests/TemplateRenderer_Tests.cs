@@ -19,14 +19,14 @@ namespace Owl.RazorTemplate.Tests
         [Fact]
         public async Task Should_Get_Rendered_Localized_Template_Content_With_Different_Cultures()
         {
-            // (await _templateRenderer.RenderAsync(
-            //     TestTemplates.WelcomeEmail,
-            //     model: new WelcomeEmailModel()
-            //     {
-            //         Name = "John"
-            //     },
-            //     cultureName: "en"
-            // )).ShouldContain("Welcome John to the abp.io!");
+            (await _templateRenderer.RenderAsync(
+                TestTemplates.WelcomeEmail,
+                model: new WelcomeEmailModel()
+                {
+                    Name = "John"
+                },
+                cultureName: "en"
+            )).ShouldContain("Welcome John to the abp.io!");
 
             (await _templateRenderer.RenderAsync(
                 TestTemplates.WelcomeEmail,
