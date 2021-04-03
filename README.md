@@ -4,6 +4,9 @@ Use razor to build your template!
 
 You can get intellisense in the IDE. Just like writing a razor page!
 
+![image](https://user-images.githubusercontent.com/6908465/113466932-374e6800-9472-11eb-96d4-69a520ea39e9.png)
+
+
 ```cs
 [DependsOn(typeof(OwlRazorTemplateModule))]
 ```
