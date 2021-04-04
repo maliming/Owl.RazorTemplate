@@ -124,9 +124,16 @@ namespace Owl.RazorTemplate
 
             using (var scope = _serviceScopeFactory.CreateScope())
             {
-                if (templateType.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IRazorTemplatePage<>)))
+                var modelType = templateType
+                    .GetInterfaces()
+                    .Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IRazorTemplatePage<>))
+                    .Select(x => x.GenericTypeArguments.FirstOrDefault())
+                    .FirstOrDefault();
+
+                if (modelType != null)
                 {
-                    ReflectionHelper.TrySetProperty(template, nameof(IRazorTemplatePage<object>.Model), _ => model);
+                    GetType().GetMethod(nameof(SetModel), BindingFlags.Instance | BindingFlags.NonPublic)
+                        ?.MakeGenericMethod(modelType).Invoke(this, new[] {template, model});
                 }
 
                 template.ServiceProvider = scope.ServiceProvider;
@@ -140,6 +147,14 @@ namespace Owl.RazorTemplate
                 await template.ExecuteAsync();
 
                 return await template.GetOutputAsync();
+            }
+        }
+
+        private void SetModel<TModel>(IRazorTemplatePage razorTemplatePage, object model = null)
+        {
+            if (razorTemplatePage is IRazorTemplatePage<TModel> razorTemplatePageWithModel)
+            {
+                razorTemplatePageWithModel.Model = (TModel)model;
             }
         }
 
