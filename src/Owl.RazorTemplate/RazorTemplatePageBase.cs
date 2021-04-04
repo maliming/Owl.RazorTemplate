@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 
 namespace Owl.RazorTemplate
 {
-    public abstract class RazorTemplatePageBase<TModel> : RazorTemplatePageBase
+    public abstract class RazorTemplatePageBase<TModel> : RazorTemplatePageBase, IRazorTemplatePage<TModel>
     {
         public TModel Model { get; set; }
     }
@@ -18,6 +19,12 @@ namespace Owl.RazorTemplate
         public IServiceProvider ServiceProvider { get; set; }
 
         public IStringLocalizer Localizer { get; set; }
+
+        public HtmlEncoder HtmlEncoder { get; set; }
+
+        public JavaScriptEncoder JavaScriptEncoder { get; set; }
+
+        public UrlEncoder UrlEncoder { get; set; }
 
         public string Body { get; set; }
 

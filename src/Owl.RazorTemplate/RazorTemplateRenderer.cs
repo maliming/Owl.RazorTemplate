@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +10,7 @@ using Microsoft.Extensions.Localization;
 using Volo.Abp;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Localization;
+using Volo.Abp.Reflection;
 using Volo.Abp.TextTemplating;
 
 namespace Owl.RazorTemplate
@@ -115,16 +119,23 @@ namespace Owl.RazorTemplate
             object model = null)
         {
             var assembly = await _compiledViewProvider.GetAssemblyAsync(templateDefinition);
+            var templateType = assembly.GetType(RazorTemplateConsts.TypeName);
+            var template = (IRazorTemplatePage) Activator.CreateInstance(templateType);
 
-            var template = (IRazorTemplatePage)Activator.CreateInstance(assembly.GetType("Razor.Template"));
             using (var scope = _serviceScopeFactory.CreateScope())
             {
-                ReflectionHelper.TrySetProperty(template, nameof(RazorTemplatePageBase<object>.Model), x => model);
-                ReflectionHelper.TrySetProperty(template, nameof(RazorTemplatePageBase<object>.Body), x => body);
-                ReflectionHelper.TrySetProperty(template, nameof(RazorTemplatePageBase<object>.GlobalContext), x => globalContext);
+                if (templateType.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IRazorTemplatePage<>)))
+                {
+                    ReflectionHelper.TrySetProperty(template, nameof(IRazorTemplatePage<object>.Model), _ => model);
+                }
 
-                template.Localizer = GetLocalizerOrNull(templateDefinition);
                 template.ServiceProvider = scope.ServiceProvider;
+                template.Localizer = GetLocalizerOrNull(templateDefinition);
+                template.HtmlEncoder = scope.ServiceProvider.GetService<HtmlEncoder>();
+                template.JavaScriptEncoder = scope.ServiceProvider.GetService<JavaScriptEncoder>();
+                template.UrlEncoder = scope.ServiceProvider.GetService<UrlEncoder>();
+                template.Body = body;
+                template.GlobalContext = globalContext;
 
                 await template.ExecuteAsync();
 

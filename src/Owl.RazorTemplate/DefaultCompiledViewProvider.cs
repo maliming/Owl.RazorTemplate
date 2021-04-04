@@ -10,7 +10,7 @@ using Volo.Abp.TextTemplating;
 
 namespace Owl.RazorTemplate
 {
-    public class CompiledViewProvider : ICompiledViewProvider, ITransientDependency
+    public class DefaultCompiledViewProvider : ICompiledViewProvider, ITransientDependency
     {
         private static readonly ConcurrentDictionary<string, Assembly> CachedAssembles = new ConcurrentDictionary<string, Assembly>();
 
@@ -18,7 +18,7 @@ namespace Owl.RazorTemplate
         private readonly IRazorProjectEngineFactory _razorProjectEngineFactory;
         private readonly ITemplateContentProvider _templateContentProvider;
 
-        public CompiledViewProvider(
+        public DefaultCompiledViewProvider(
             IRazorProjectEngineFactory razorProjectEngineFactory,
             CSharpCompiler cSharpCompiler,
             ITemplateContentProvider templateContentProvider)
@@ -42,22 +42,24 @@ namespace Owl.RazorTemplate
             return CachedAssembles.GetOrAdd((templateDefinition.Name + templateContent).ToMd5(), await CreateAssembly(templateContent));
         }
 
-        public virtual async Task<Stream> GetAssemblyStreamAsync(TemplateDefinition templateDefinition)
+        protected virtual async Task<Stream> GetAssemblyStreamAsync(TemplateDefinition templateDefinition, string templateContent)
         {
-            var templateContent = await _templateContentProvider.GetContentOrNullAsync(templateDefinition);
-            return await GetAssemblyStreamAsync(templateDefinition, templateContent);
-        }
+            var razorProjectEngine = await _razorProjectEngineFactory.CreateAsync(builder =>
+            {
+                builder.SetNamespace(RazorTemplateConsts.DefaultNameSpace);
+                builder.ConfigureClass((document, node) =>
+                {
+                    node.ClassName = RazorTemplateConsts.DefaultClassName;
+                });
+            });
 
-        protected virtual Task<Stream> GetAssemblyStreamAsync(TemplateDefinition templateDefinition, string templateContent)
-        {
-            var razorProjectEngine = _razorProjectEngineFactory.Create();
             var codeDocument = razorProjectEngine.Process(
                 RazorSourceDocument.Create(templateContent, templateDefinition.Name), null,
                 new List<RazorSourceDocument>(), new List<TagHelperDescriptor>());
 
             var cSharpDocument = codeDocument.GetCSharpDocument();
 
-            return Task.FromResult(_cSharpCompiler.CreateAssembly(cSharpDocument.GeneratedCode, templateDefinition.Name));
+            return _cSharpCompiler.CreateAssembly(cSharpDocument.GeneratedCode, templateDefinition.Name);
         }
     }
 }

@@ -8,7 +8,5 @@ namespace Owl.RazorTemplate
     public interface ICompiledViewProvider
     {
         Task<Assembly> GetAssemblyAsync(TemplateDefinition templateDefinition);
-
-        Task<Stream> GetAssemblyStreamAsync(TemplateDefinition templateDefinition);
     }
 }

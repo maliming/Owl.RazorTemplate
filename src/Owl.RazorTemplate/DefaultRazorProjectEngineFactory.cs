@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
 using Volo.Abp.DependencyInjection;
 
@@ -6,14 +7,14 @@ namespace Owl.RazorTemplate
 {
     public class DefaultRazorProjectEngineFactory : IRazorProjectEngineFactory, ITransientDependency
     {
-        public virtual RazorProjectEngine Create(Action<RazorProjectEngineBuilder> configure = null)
+        public virtual async Task<RazorProjectEngine> CreateAsync(Action<RazorProjectEngineBuilder> configure = null)
         {
-            return RazorProjectEngine.Create(CreateRazorConfiguration(), EmptyProjectFileSystem.Empty, configure);
+            return RazorProjectEngine.Create(await CreateRazorConfigurationAsync(), EmptyProjectFileSystem.Empty, configure);
         }
 
-        protected virtual RazorConfiguration CreateRazorConfiguration()
+        protected virtual Task<RazorConfiguration> CreateRazorConfigurationAsync()
         {
-            return RazorConfiguration.Default;
+            return Task.FromResult(RazorConfiguration.Default);
         }
     }
 }

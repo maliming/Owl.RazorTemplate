@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Owl.RazorTemplate
 {
-    public static class ReflectionHelper
+    internal static class ReflectionHelper
     {
         private static readonly ConcurrentDictionary<string, PropertyInfo> CachedObjectProperties =
             new ConcurrentDictionary<string, PropertyInfo>();

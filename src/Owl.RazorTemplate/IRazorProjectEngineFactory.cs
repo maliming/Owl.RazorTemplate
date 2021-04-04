@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
 
 namespace Owl.RazorTemplate
 {
     public interface IRazorProjectEngineFactory
     {
-        RazorProjectEngine Create(Action<RazorProjectEngineBuilder> configure = null);
+        Task<RazorProjectEngine> CreateAsync(Action<RazorProjectEngineBuilder> configure = null);
     }
 }
