@@ -16,19 +16,16 @@ namespace Owl.RazorTemplate
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly ICompiledViewProvider _compiledViewProvider;
-        private readonly ITemplateContentProvider _templateContentProvider;
         private readonly ITemplateDefinitionManager _templateDefinitionManager;
         private readonly IStringLocalizerFactory _stringLocalizerFactory;
 
         public RazorTemplateRenderer(
             IServiceScopeFactory serviceScopeFactory,
             ICompiledViewProvider compiledViewProvider,
-            ITemplateContentProvider templateContentProvider,
             ITemplateDefinitionManager templateDefinitionManager,
             IStringLocalizerFactory stringLocalizerFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
-            _templateContentProvider = templateContentProvider;
             _templateDefinitionManager = templateDefinitionManager;
             _stringLocalizerFactory = stringLocalizerFactory;
             _compiledViewProvider = compiledViewProvider;
@@ -103,14 +100,8 @@ namespace Owl.RazorTemplate
             Dictionary<string, object> globalContext,
             object model = null)
         {
-            var rawTemplateContent = await _templateContentProvider
-                .GetContentOrNullAsync(
-                    templateDefinition
-                );
-
             return await RenderTemplateContentWithRazorAsync(
                 templateDefinition,
-                rawTemplateContent,
                 body,
                 globalContext,
                 model
@@ -119,12 +110,11 @@ namespace Owl.RazorTemplate
 
         protected virtual async Task<string> RenderTemplateContentWithRazorAsync(
             TemplateDefinition templateDefinition,
-            string templateContent,
             string body,
             Dictionary<string, object> globalContext,
             object model = null)
         {
-            var assembly = await _compiledViewProvider.GetAssemblyAsync(templateDefinition, templateContent);
+            var assembly = await _compiledViewProvider.GetAssemblyAsync(templateDefinition);
 
             var template = (IRazorTemplatePage)Activator.CreateInstance(assembly.GetType("Razor.Template"));
             using (var scope = _serviceScopeFactory.CreateScope())

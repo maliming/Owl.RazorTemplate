@@ -40,7 +40,7 @@ namespace Owl.RazorTemplate
             .Select(x => MetadataReference.CreateFromFile(x.Location))
             .ToImmutableList();
 
-        public virtual Assembly CreateAssembly(string code, string assemblyName, List<MetadataReference> references = null, CSharpCompilationOptions options = null, MemoryStream outAssemblyStream = null)
+        public virtual Stream CreateAssembly(string code, string assemblyName, List<MetadataReference> references = null, CSharpCompilationOptions options = null)
         {
             var defaultReferences = DefaultReferences.Concat(Options.References);
             try
@@ -68,14 +68,10 @@ namespace Owl.RazorTemplate
                     }
 
                     memoryStream.Seek(0, SeekOrigin.Begin);
+                    var assemblyStream = new MemoryStream();
+                    memoryStream.CopyTo(assemblyStream);
 
-                    if (outAssemblyStream != null)
-                    {
-                        memoryStream.Position = 0;
-                        memoryStream.CopyTo(outAssemblyStream);
-                    }
-
-                    return Assembly.Load(memoryStream.ToArray());
+                    return assemblyStream;
                 }
             }
             catch (Exception e)
